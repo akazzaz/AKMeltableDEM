@@ -178,6 +178,7 @@ void  Cconfig::sum_heat()
 		if(fabs(P[ip].X.x[1])>=0.5*cell.L.x[1]-2*parameter.Dmax){//AK Addition - average boundary temp only
             	sum_T_bound += P[ip].T*P[ip].m;//AK Addition - average boundary temp only
             	sum_m_bound += P[ip].m;//AK Addition - average boundary temp only
+		}
 	}
 	parameter.average_temperature = sum_T / parameter.total_mass;
 	average_temperature_bound = sum_T_bound/sum_m_bound; //AK Addition - average boundary temp only
