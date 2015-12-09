@@ -29,7 +29,8 @@ void  Cconfig::update_particle()
             P[ip].R= P[ip].RS +P[ip].r_polymer; 
             P[ip].dr_swelling = parameter.SWELLING_RATE *P[ip].RS ; // Fixed size of core increment
         }
-		else P[ip].r_polymer = 0.0;
+	else P[ip].r_polymer = 0.0;
+        parameter.init_temperature.x[2]=20; // AK addition
         if(parameter.init_temperature.x[2] != 0.0)
             P[ip].T = parameter.init_temperature.x[2];
 		P[ip].Tdot = 0.0;
