@@ -57,7 +57,7 @@ bool LIQUID_TRANSFER;
 #define INLET_OUTLET_PRESSURE	0.01	// Water inlet/outlet rate
 #define WETTING_RATE	0.0005
 
-#define MELTING false
+#define MELTING true // AK mod - switch on melt
 bool Voronoi_Update;
 string BRANCH;
 string BOUNDARY;
