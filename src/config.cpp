@@ -704,6 +704,14 @@ void  Cconfig::liquid_transfer(){
 	{
 		P[ip].sum_vij = 0.0;
 		P[ip].water_volume_old = P[ip].water_volume;
+		// AK mod start - update fluid volume based on change in melt
+	        if (MELTING){
+	            double dmelt_volume=4/3*PI*(pow(P[ip].RS_old,3)-pow(P[ip].RS,3));
+	            if (P[ip].water_volume + dmelt_volume < 0) dmelt_volume=-P[ip].water_volume;
+	            else if (P[ip].water_volume + dmelt_volume >4/3*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3))) dmelt_volume=4/3*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3))-P[ip].water_volume;
+	            else if (P[ip].water_volume + dmelt_volume >4/3*PI*pow(P[ip].R,3)) dmelt_volume=4/3*PI*pow(P[ip].R,3)-P[ip].water_volume;
+	            P[ip].water_volume+=dmelt_volume;
+	        }// AK mod end - update fluid volume based on change in melt
 	}
 	
 	for(int ic=0;ic<C.size();ic++){
