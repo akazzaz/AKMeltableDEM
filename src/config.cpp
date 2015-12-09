@@ -170,8 +170,17 @@ void  Cconfig::sum_heat()
 {
 	
 	double sum_T=0;
-	for(int ip=0; ip< P.size();ip++) sum_T += P[ip].T*P[ip].m;
+	double sum_T_bound=0;//AK Addition - average boundary temp only
+	double sum_m_bound=0;//AK Addition - average boundary temp only
+	double average_temperature_bound=0;//AK Addition - average boundary temp only
+	for(int ip=0; ip< P.size();ip++){
+		sum_T += P[ip].T*P[ip].m;
+		if(fabs(P[ip].X.x[1])>=0.5*cell.L.x[1]-2*parameter.Dmax){//AK Addition - average boundary temp only
+            	sum_T_bound += P[ip].T*P[ip].m;//AK Addition - average boundary temp only
+            	sum_m_bound += P[ip].m;//AK Addition - average boundary temp only
+	}
 	parameter.average_temperature = sum_T / parameter.total_mass;
+	average_temperature_bound = sum_T_bound/sum_m_bound; //AK Addition - average boundary temp only
 	
 	PN=0.0; PS=0.0; PT=0.0; PR=0.0;
 	for(int ic=0;ic<C.size();ic++)
@@ -201,14 +210,15 @@ void  Cconfig::sum_heat()
         if(C[ic].B >=0)
 		P[C[ic].B].phi-= C[ic].phi ;
 		
-/*		if(C[ic].Flag_Boundary){
-			double dPhi = -2.*C[ic].conductivity*C[ic].a *(parameter.average_temperature-20.0)*fabs(C[ic].dX.x[1])/cell.L.x[1]; //exp
+		if(C[ic].Flag_Boundary){
+			//double dPhi = -2.*C[ic].conductivity*C[ic].a *(parameter.average_temperature-20.0)*fabs(C[ic].dX.x[1])/cell.L.x[1]; //exp
+			double dPhi = -2.*C[ic].conductivity*C[ic].a *(average_temperature_bound-20.0)*fabs(C[ic].dX.x[1])/cell.L.x[1]; //exp //AK Addition - average boundary temp only
 			P[C[ic].A].phi += dPhi;
-            if(C[ic].B >=0)
+            		if(C[ic].B >=0)
 			P[C[ic].B].phi += dPhi;
 			heat_out += 2.0*dPhi;
 		}
-*/
+
 		if(simule_thermal_production)
 		{
 			P[C[ic].A].production+= C[ic].production/2.;
