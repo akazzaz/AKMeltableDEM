@@ -138,7 +138,8 @@ void Cparticle::corrector(double dt_on_2,Ccell &cell)
 
 // Update total mass inside the cell, grain mass + water mass.
     double msum = m;
-    if(LIQUID_TRANSFER) msum += water_volume*LIQUID_DENSITY;
+    //if(LIQUID_TRANSFER) msum += water_volume*LIQUID_DENSITY;
+    if(LIQUID_TRANSFER && !MELTING) msum += water_volume*LIQUID_DENSITY;// AK mod - avoid double counting melt in mass of cell
 	A = Fsum/msum;
 	
 	V += (A-Ap)*dt_on_2;
