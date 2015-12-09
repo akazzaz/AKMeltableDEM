@@ -149,7 +149,8 @@ void Crun::init_evolve(void)
         config.Wall[4].T = config.parameter.init_temperature.x[1];        // bottom wall temperature
     }
 	
-	get_secure("WETTING or DRYING, NO_LIQUID", "WETTING","DRYING","NO_LIQUID", choice);
+	//get_secure("WETTING or DRYING, NO_LIQUID", "WETTING","DRYING","NO_LIQUID", choice);
+	get_secure("WETTING or DRYING, NO_LIQUID, MELT_LIQUID", "WETTING","DRYING","NO_LIQUID","MELT_LIQUID", choice); // AK mod - add MELT_LIQUID option
 	if(choice=="WETTING"){
 		LIQUID_TRANSFER = true;
 		config.parameter.INITIAL_SATURATION = 0.5;
@@ -162,6 +163,15 @@ void Crun::init_evolve(void)
 		config.parameter.FIXED_SATURATION = 0.5;
 		config.parameter.CONTACT_ANGLE = PI/4.0;
 		}
+	//AK mod start - set parameters for MELT_LIQUID selection
+	if(choice=="MELT_LIQUID"){
+	        LIQUID_TRANSFER = true;
+	        config.parameter.INITIAL_SATURATION = 0;
+	        config.parameter.FIXED_SATURATION = 0; // Depreciated
+	        //config.parameter.CONTACT_ANGLE = PI/4.0;
+	        get_secure("Enter the CONTACT_ANGLE", "CONTACT_ANGLE", config.parameter.CONTACT_ANGLE);
+	            config.parameter.CONTACT_ANGLE *= PI/180.0;
+	        }//AK mod end - set parameters for MELT_LIQUID selection
 	if(choice=="NO_LIQUID"){
 		LIQUID_TRANSFER = false;
 		config.parameter.INITIAL_SATURATION = 0.5;
