@@ -68,8 +68,8 @@ bool Ccontact::AM_I_CONTACTING()
 			&& deltaN <= 0.2*min(pA->R, pB->R) && LIQUID_TRANSFER)  // NEED CHECK !!!
 			return true;
 	}
-//	if((deltaN>=0 && deltaNB <= parameter->max_gap && !LIQUID_TRANSFER) // Solid contact without water
-    if((deltaN>= parameter->max_gap && !LIQUID_TRANSFER) // Solid contact without water
+	if((deltaN>=0 && deltaNB <= parameter->max_gap && !LIQUID_TRANSFER) // Solid contact without water // AK mod - swtich on bonding
+      //if((deltaN>= parameter->max_gap && !LIQUID_TRANSFER) // Solid contact without water
 		|| (deltaN>=0 && deltaNB <= 0 && water_volume <= 1e-30) // non-existing capillary bridge
 		|| (water_volume>1e-30 && deltaN >= min(pow(water_volume,0.3333),MAX_CAP_LENGTH) ) ) // existing capillary bridge, rupture
 		return false; //there is no contact, and no pre-existing bond, and no capilary force (YG)
@@ -107,7 +107,7 @@ void Ccontact::increment_force(double dt)
 {
 	double fnold,fntest;
 	double deltaNS, RSeff;
-//	double dNB = 0.0;
+	double dNB = 0.0; // AK mod - switch on bonding
 	double h0 = 0.1; //exp
 	double h = h0;
     aS = 0.0;
@@ -146,21 +146,23 @@ void Ccontact::increment_force(double dt)
 		if(h < h0) h = h0;
 	}
 		
-	// update deltaNB, aB	
-	//if(pA->dRS != 0 || pB->dRS !=0)
-	//{		
-		//if(fabs(deltaNS) - pA->dRS - pB->dRS <0) // previous step with a solid gap
-		//{
-			//dNB = fabs(deltaNS) - (nA*Vn) * dt;
-			//if(dNB<0) dNB = 0;
-		//}
-		//else dNB = pA->dRS + pA->dRS;	
-		//deltaNB += dNB;
-//	}
-//	if(deltaNB < 0.0) 
+	// update deltaNB, aB
+	// AK mod start - switch on bonding
+	if(pA->dRS != 0 || pB->dRS !=0)
+	{		
+		if(fabs(deltaNS) - pA->dRS - pB->dRS <0) // previous step with a solid gap
+		{
+			dNB = fabs(deltaNS) - (nA*Vn) * dt;
+			if(dNB<0) dNB = 0;
+		}
+		else dNB = pA->dRS + pA->dRS;	
+		deltaNB += dNB;
+	}
+	if(deltaNB < 0.0) 
 		deltaNB = 0.0;
-//	aB = sqrt(RSeff *deltaNB);
-	aB = 0.0;
+	aB = sqrt(RSeff *deltaNB);
+//	aB = 0.0;
+	// AK mod end - switch on bonding
  	if(aS < aB) aS = aB;
  	
 	mu= parameter->friction_coefficient;
@@ -220,14 +222,18 @@ if(LIQUID_TRANSFER){
 		fcap = factor *(coefficient_c+ exp(coefficient_a*D_bridge/R2 + coefficient_b));
 	}
 
-//	double FBond = deltaNB*E*aB;
-//	FBond = 0.0;
-// for solid contact, deltaNS < 0, deltaNB>=0!, Fn*nA negtive for compression.	
-//	Fn = nA*(deltaNS*E*aS - deltaNB*E*aB);				//normal force, imp. before 15.11.2010
-	fnold = fn; //renember the old value of normal force norm
-	fn = 4.0/3.0 * deltaNS*E*aS;     //Hertz contact
+	// AK mod start - switch on bonding
+	double FElas = 4.0/3.0 * deltaNS*E*aS;
+    	double FBond = 4.0/3.0*deltaNB*E*aB;
+    	if (isnan(FBond) || fabs(FBond)<1e-10*fabs(FElas))FBond=0;
+	//  FBond = 0.0;
+	//  for solid contact, deltaNS < 0, deltaNB>=0!, Fn*nA negtive for compression.   
+	//  Fn = 4.0/3.0*nA*(deltaNS*E*aS - deltaNB*E*aB);              //normal force, imp. before 15.11.2010
+    	fnold = fn; //renember the old value of normal force norm
+    	fn = FElas - FBond;   //Hertz contact with bond
 	Fn = nA*(fn + fcap);						//  normal force
-    FnEff = nA*(fn);						//  effective normal force
+    	// AK mod end - swtich on bonding
+    	FnEff = nA*(fn);						//  effective normal force
 	Ft += (uDotT*E* ct *aS*dt)  + (OmeMean^Ft)*dt; 		//increment norm and rotation for tangential force
 	Gn += (dOmeN*E*aS*aS*aS*dt) + (OmeMean^Gn)*dt ; 	//rolling moment cr is the numerical constant, dimensionless, for the rolling and twist 
 	Gt += (dOmeT*E*aS*aS*aS*dt) + (OmeMean^Gt)*dt ;		//twist moment
@@ -246,28 +252,30 @@ if(LIQUID_TRANSFER){
 	else fntest = fnold;	 //if loading, take the smaller of these two for the sliding criteria as well
 	if(fntest <0.0) fntest=0.0; // capillary tensile, 0.0 for friction/twisting/rolling
 
-	//if(deltaNB > 0.0) 
-	//{ 
-		//double aB_aS = aB/aS;
-		//double aB_aS_cubic = pow(aB_aS,3.0);
-		//double DForce = ft + 2.0*gt/aS * aB_aS_cubic + mu*( nA*Fn + 4.0*gn/aS *aB_aS_cubic);
-		//double A_b = PI *aB*aB;
-		//double BForce = BOND_STRENGTH * A_b;
-		//double DDamage;
-		//if(DForce >= BForce)
-		//{	// Debonding by either normal stress or shear stress
-			// Damage model!
-			//DDamage = 10.0* DForce/BForce *dt;
-			//if(DDamage >= 1.0) DDamage=1.0;
-			//deltaNB *= 1.0 - DDamage;
-		//}
-		//if(deltaNB > 0.0){
-			//cr *= 100.0; mu *= 100.0;
-		//}
-	//}
-	//if(deltaNB <= 0.0 && (pA->RS < pA->R || pB->RS < pB->R)){ //exp, melting, but no bonding
-		//cr *= 0.0; mu *= 0.0;
-//	}
+    // AK mod start - swtich on bonding
+    if(deltaNB > 0.0) 
+    { 
+        double aB_aS = aB/aS;
+        double aB_aS_cubic = pow(aB_aS,3.0);
+        double DForce = ft + 2.0*gt/aS * aB_aS_cubic + mu*( nA*Fn + 4.0*gn/aS *aB_aS_cubic);
+        double A_b = PI *aB*aB;
+        double BForce = BOND_STRENGTH * A_b;
+        double DDamage;
+        if(DForce >= BForce)
+        {   // Debonding by either normal stress or shear stress
+            // Damage model!
+            DDamage = 10.0* DForce/BForce *dt;
+            if(DDamage >= 1.0) DDamage=1.0;
+            deltaNB *= 1.0 - DDamage;
+        }
+        if(deltaNB > 0.0){
+            cr *= 100.0; mu *= 100.0;
+        }
+    }
+    if(deltaNB <= 0.0 && (pA->RS < pA->R || pB->RS < pB->R)){ //exp, melting, but no bonding
+        cr *= 0.0; mu *= 0.0;
+    }
+    // AK mod end - switch on bonding
 	
 	TANGENTIAL_SLIDE 	= rescale_slide(Ft,ft, mu*fntest); 
 	ROLLING_SLIDE 		= rescale_slide(Gn,gn, cr*aS*fntest);//cr is the empirical numerical constant, usually equal to 1
