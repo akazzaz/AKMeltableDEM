@@ -127,6 +127,7 @@ void Crun::init_evolve(void)
         get_secure("Enter the composite fraction", "COMP_FRACTION", config.parameter.COMP_FRACTION);
         get_secure("Grain swelling rate", "SWELLING_RATE", config.parameter.SWELLING_RATE);
 	}
+	else{get_secure("Enter the composite fraction", "COMP_FRACTION", config.parameter.COMP_FRACTION);} // AK mod - set composite fraction
 	
 	get_secure("Enter the conductivity of bulk grains","CONDUCTIVITY",config.parameter.bulk_conductivity);
 	get_secure("Enter the specific_heat of bulk grains","SPECIFIC_HEAT",config.parameter.specific_heat);
@@ -284,6 +285,13 @@ if(LIQUID_TRANSFER)
 			cout<<"MAX CONTACT_ANGLE:"<<180.0/PI*angle_max<<"\tMIN CONTACT_ANGLE:"<<180.0/PI*angle_min
 			<<"\tAVE CONTACT_ANGLE:"<<180.0/PI*angle_ave<<endl;
 //			cout<<"Number of bonded contacts: "<<nc<<"\tNumber of melted particles: "<<np<<endl;
+			// AK mod start - display for melt and bond
+			if(MELTING){
+	                	int nb=0, nm=0;
+	                	for(int ip=0;ip<config.P.size();ip++) {if(config.P[ip].RS < config.P[ip].R) nm++;}
+	                	for(int ic=0;ic<config.C.size();ic++) {if(config.C[ic].aB > 0) nb++;}
+	                cout<<"Number of bonded contacts: "<<nb<<"\tNumber of melted particles: "<<nm<<endl;
+	            	}// AK mod end - display for melt and bond
 
 if(LIQUID_TRANSFER)
 			cout<<"Number of wetted grains: "<<np
@@ -291,7 +299,8 @@ if(LIQUID_TRANSFER)
             
 			
 if(config.simule_thermal_conduction){
-    cout<<"System temperature: "<< config.parameter.average_temperature<<"\t"<<config.Wall[3].T<<"\t"<<config.Wall[4].T<<"\t"<<config.parameter.volume_heating<<endl;
+    if(BOUNDARY != "PERIODIC_SHEAR"){cout<<"System temperature: "<< config.parameter.average_temperature<<"\t"<<config.Wall[3].T<<"\t"<<config.Wall[4].T<<"\t"<<config.parameter.volume_heating<<endl;} // AK mod - fix temp for shear
+    else {cout<<"System temperature: "<< config.parameter.average_temperature<<"\t"<<config.parameter.volume_heating<<endl;} // AK mod - fix temp for shear
 }
 		
 if(config.simule_thermal_production){
@@ -310,7 +319,7 @@ if(config.simule_thermal_production){
 		file<<config.t<<"\t"<<config.cell.Xshift<<"\t"<<config.cell.L.x[1]<<"\t"
 		<<config.cell.stress.x[1][1]<<"\t"<<config.cell.stress.x[1][0]
             <<"\t"<<config.parameter.average_temperature
-//            <<"\t"<<config.cap_pressure_mid*1.0/config.parameter.SURFACE_TENSION
+            <<"\t"<<config.cap_pressure_mid*1.0/config.parameter.SURFACE_TENSION // AK mod - switch on cap pressure
             <<"\t"<<config.saturation
             <<"\t"<<config.cap_pressure*1.0/config.parameter.SURFACE_TENSION
             <<"\t"<<config.water_content<<endl;
