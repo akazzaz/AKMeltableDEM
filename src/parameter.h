@@ -49,9 +49,9 @@ public:
 	double average_temperature;
 	
 	//AK mod start - melt & bond parameters
-	double full_melt_num; /**< Number of fully moltent particles.*/
-	double part_melt_num; /**< Number of partially moltent particles.*/
-	double no_melt_num; /**< Number of non-moltent (fully solid) particles.*/
+	int full_melt_num; /**< Number of fully moltent particles.*/
+	int part_melt_num; /**< Number of partially moltent particles.*/
+	int no_melt_num; /**< Number of non-moltent (fully solid) particles.*/
 	
 	double melt_frac; /**< total volume fraction of melt.*/
 	double solid_frac; /**< total volume fraction of solid (non-melt).*/
