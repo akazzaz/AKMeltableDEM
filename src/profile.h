@@ -7,6 +7,9 @@
 class Cslice
 {
 	public:
+	double melt_frac;	/** Melt volume fraction in slice.*/
+	double solid_frac;	/** Solid volume fraction in slice.*/
+	double void_frac;	/** Void volume fraction in slice.*/
 	Cvector V;						/**<Average particle velocity.*/
 	double frac_solid; 				/**<Average solid fraction.*/
 	double T;						/**<Average particle temperature.*/
