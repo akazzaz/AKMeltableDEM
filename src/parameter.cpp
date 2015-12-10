@@ -54,6 +54,11 @@ ofstream &operator<<(ofstream &file,Cparameter p)
 	file << p.Dmean<<"\t"<< p.Mmean<<"\t"<< p.RHOmean<<"\t"<<p.Dmin<<"\t"<<p.Dmax<<"\t";
 	file << p.GSD  <<"\t"<< p.fractal_dim <<"\t";
 	file << p.J <<"\t"<<p.K <<"\t"<<p.I<<"\t";
+	//AK mod start - export new melt and bond parameter values
+	file << p.full_melt_num <<"\t"<<p.part_melt_num <<"\t"<<p.no_melt_num<<"\t";
+	file << p.melt_frac <<"\t"<<p.solid_frac <<"\t"<<p.void_frac<<"\t";
+	file << p.coord_num <<"\t"<<p.bond_average <<"\t"<<p.bond_area_average<<"\t";
+	//AK mod end - export new melt and bond parameter values
 	file <<endl;
 	return file;
 }
@@ -65,6 +70,11 @@ ifstream & operator>>(ifstream &file,Cparameter &p)
 	file >> p.Dmean>>  p.Mmean>> p.RHOmean>>p.Dmin>>p.Dmax;							//c8 -12; 
 	file >> p.GSD  >> p.fractal_dim;											//c13 -14; 
 	file >> p.J >> p.K >>p.I; 													//c15-17
+	//AK mod start - import new melt and bond parameter values
+	file >> p.full_melt_num >> p.part_melt_num >> p.no_melt_num;
+	file >> p.melt_frac >> p.solid_frac >> p.void_frac;
+	file >> p.coord_num >> p.bond_average >> p.bond_area_average;
+	//AK mod end - import new melt and bond parameter values
 	return file;
 }
 
