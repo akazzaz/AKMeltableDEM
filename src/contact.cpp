@@ -148,7 +148,7 @@ void Ccontact::increment_force(double dt)
 		
 	// update deltaNB, aB
 	// AK mod start - switch on bonding
-	if(pA->dRS != 0 || pB->dRS !=0)
+	if((pA->dRS != 0 || pB->dRS !=0) && BRANCH!="CREATE")
 	{		
 		if(fabs(deltaNS) - pA->dRS - pB->dRS <0) // previous step with a solid gap
 		{
