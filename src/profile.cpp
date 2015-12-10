@@ -2,6 +2,11 @@
 ofstream & operator<<(ofstream &file,Cslice s)
 {
 	file<<s.Y<<"\t";
+	// AK mod start - Volume fractions
+	file<<s.melt_frac<<"\t";
+	file<<s.solid_frac<<"\t";
+	file<<s.void_frac<<"\t";
+	// AK mod end - Volume fractions
 	file<<s.frac_solid<<"\t";
 	file<<s.V;
 	file<<s.T<<"\t";
@@ -12,15 +17,29 @@ ofstream & operator<<(ofstream &file,Cslice s)
 void Cslice::average(void)
 {
 	double volume_total_in_slice=0;
+	// AK mod start - Calculate volume fractions
+	double melt_vol=0;
+	double solid_vol=0;
+	// AK mod end - Calculate volume fractions
 	for(int ip=0;ip<P.size();ip++)
 		{
 			volume_total_in_slice+=volume_in_slice[ip];
 			T+= P[ip]->T* volume_in_slice[ip];
 			V+= (P[ip]->V* volume_in_slice[ip]);
+			// AK mod start - Calculate volume fractions
+			if (BRANCH != "CREATE"){melt_vol+=4.0/3.0*PI*(pow(P[ip]->R,3)-pow(P[ip]->RS,3));
+			solid_vol+=4.0/3.0*PI*pow(P[ip]->RS,3);}
+			else {solid_vol+=4.0/3.0*PI*pow(P[ip]->RS,3);}
+			// AK mod end - Calculate volume fractions
 		}
 	frac_solid = volume_total_in_slice/vol_slice;
 	T/=volume_total_in_slice;
 	V/=volume_total_in_slice;
+	// AK mod start - Calculate volume fractions
+	melt_frac=melt_vol/vol_slice;
+	solid_frac=solid_vol/vol_slice;
+	void_frac=1-melt_frac-solid_frac;
+	// AK mod end - Calculate volume fractions
 }
 
 
