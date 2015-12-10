@@ -7,9 +7,11 @@
 class Cslice
 {
 	public:
+	//AK mod start - Volume fractions
 	double melt_frac;	/** Melt volume fraction in slice.*/
 	double solid_frac;	/** Solid volume fraction in slice.*/
 	double void_frac;	/** Void volume fraction in slice.*/
+	//AK mod end - Volume fractions
 	Cvector V;						/**<Average particle velocity.*/
 	double frac_solid; 				/**<Average solid fraction.*/
 	double T;						/**<Average particle temperature.*/
