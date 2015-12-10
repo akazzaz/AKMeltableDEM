@@ -173,24 +173,61 @@ void  Cconfig::sum_heat()
 	double sum_T_bound=0;//AK Addition - average boundary temp only
 	double sum_m_bound=0;//AK Addition - average boundary temp only
 	double average_temperature_bound=0;//AK Addition - average boundary temp only
+	
+	//AK mod start - Add melt & bond parameters: reset values
+	parameter.full_melt_num=0;
+	parameter.part_melt_num=0;
+	parameter.no_melt_num=0;
+	
+	parameter.melt_frac=0.0;
+	parameter.solid_frac=0.0;
+	
+	parameter.coord_num=2*C.size()/P.size();
+	bond_average=0.0;
+	bond_area_average=0.0;
+	//AK mod end - Add melt & bond parameters: reset values
+	
 	for(int ip=0; ip< P.size();ip++){
 		sum_T += P[ip].T*P[ip].m;
 		if(fabs(P[ip].X.x[1])>=0.5*cell.L.x[1]-2*parameter.Dmax){//AK Addition - average boundary temp only
             	sum_T_bound += P[ip].T*P[ip].m;//AK Addition - average boundary temp only
             	sum_m_bound += P[ip].m;//AK Addition - average boundary temp only
 		}
+		
+		//AK mod start - Add melt parameters: recalculate values
+		if (P[ip].R>=0.999*P[ip].RS) parameter.full_melt_num++;
+		else if (P[ip].R<0.999*P[ip].RS && P[ip].R>=0.001*P[ip].RS) parameter.part_melt_num++;
+		else parameter.no_melt_num++;
+		
+		parameter.melt_frac+=4.0/3.0*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3));
+		parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);
+		//AK mod end - Add melt parameters: recalculate values
 	}
+	
+	//AK mod start - Add melt parameters: recalculate values
+	parameter.melt_frac/=cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]);
+	parameter.solid_frac/=cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]);
+	parameter.void_frac=1-parameter.melt_frac-parameter.solid_frac;
+	//AK mod end - Add melt parameters: recalculate values
+	
 	parameter.average_temperature = sum_T / parameter.total_mass;
 	average_temperature_bound = sum_T_bound/sum_m_bound; //AK Addition - average boundary temp only
 	
 	PN=0.0; PS=0.0; PT=0.0; PR=0.0;
 	for(int ic=0;ic<C.size();ic++)
 	{
+		//AK mod start - Add bond parameters: recalculate values
+		if (C[ic].aB>0){bond_average++;bond_area_average+=PI*pow(C[ic].aB,2);}
+		//AK mod end - Add bond parameters: recalculate values
 		PN += C[ic].production_normal;
 		PS += C[ic].production_slide;
 		PT += C[ic].production_twist;
 		PR += C[ic].production_rolling;
 	}
+	//AK mod start - Add bond parameters: recalculate values
+	bond_area_average/=bond_average>0?bond_average:1;
+	bond_average*=2/P.size();
+	//AK mod end - Add bond parameters: recalculate values
 	
 	heat_in = cell.shear_stress_in * cell.shear_rate + cell.normal_stress_in * cell.dilat_rate;
 	heat_in *= cell.L.x[0]* cell.L.x[1]* cell.L.x[2];
