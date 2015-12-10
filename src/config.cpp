@@ -183,8 +183,8 @@ void  Cconfig::sum_heat()
 	parameter.solid_frac=0.0;
 	
 	parameter.coord_num=2*C.size()/P.size();
-	bond_average=0.0;
-	bond_area_average=0.0;
+	parameter.bond_average=0.0;
+	parameter.bond_area_average=0.0;
 	//AK mod end - Add melt & bond parameters: reset values
 	
 	for(int ip=0; ip< P.size();ip++){
@@ -217,7 +217,7 @@ void  Cconfig::sum_heat()
 	for(int ic=0;ic<C.size();ic++)
 	{
 		//AK mod start - Add bond parameters: recalculate values
-		if (C[ic].aB>0){bond_average++;bond_area_average+=PI*pow(C[ic].aB,2);}
+		if (C[ic].aB>0){parameter.bond_average++;parameter.bond_area_average+=PI*pow(C[ic].aB,2);}
 		//AK mod end - Add bond parameters: recalculate values
 		PN += C[ic].production_normal;
 		PS += C[ic].production_slide;
@@ -225,8 +225,8 @@ void  Cconfig::sum_heat()
 		PR += C[ic].production_rolling;
 	}
 	//AK mod start - Add bond parameters: recalculate values
-	bond_area_average/=bond_average>0?bond_average:1;
-	bond_average*=2/P.size();
+	parameter.bond_area_average/=parameter.bond_average>0?parameter.bond_average:1;
+	parameter.bond_average*=2/P.size();
 	//AK mod end - Add bond parameters: recalculate values
 	
 	heat_in = cell.shear_stress_in * cell.shear_rate + cell.normal_stress_in * cell.dilat_rate;
