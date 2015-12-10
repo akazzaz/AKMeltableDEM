@@ -146,12 +146,13 @@ void Cconfig::predictor()
     
     //AK mod start - Add melt parameters: recalculate values
     for(int ip=0; ip< P.size();ip++){
-	if (P[ip].R>=0.999*P[ip].RS) parameter.full_melt_num++;
-	else if (P[ip].R<0.999*P[ip].RS && P[ip].R>=0.001*P[ip].RS) parameter.part_melt_num++;
+	if (P[ip].R>=0.999*P[ip].RS && BRANCH != "CREATE") parameter.full_melt_num++;
+	else if (P[ip].R<0.999*P[ip].RS && P[ip].R>=0.001*P[ip].RS && BRANCH != "CREATE") parameter.part_melt_num++;
 	else parameter.no_melt_num++;
 		
-	parameter.melt_frac+=4.0/3.0*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3));
-	parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);
+	if (BRANCH != "CREATE"){parameter.melt_frac+=4.0/3.0*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3));
+	parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);}
+	else {parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);}
     }
     parameter.melt_frac/=cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]);
     parameter.solid_frac/=cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]);
