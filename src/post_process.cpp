@@ -20,7 +20,7 @@ void Crun_post_process::init(void)
 	{
 		config.fread(where_read);
 		where_read.current_file++;
-		list_config.push_back(config); // AK mod - reactivate post-processing
+		//list_config.push_back(config); // AK mod - reactivate post-processing
 	}
 	cout<<"Start reading the files = SUCCESS"<<endl<<endl;
 }
@@ -58,7 +58,7 @@ void Crun_post_process::post_process()
 		string file_name;//example to write data for each saving files. Yes, it's ma pain in the ass
 		stringstream i_string;  i_string<<int(iconf+first);
 		ofstream file;
-		// AK mod start - reactivate profile & mass distribution output
+		/*// AK mod start - reactivate profile & mass distribution output
 		file_name = path_to_write+"/profile_"+i_string.str()  ;
 		file.open(file_name.c_str());
 		for(int is=0;is<profile.slice.size();is++)//for each slice, we print something
@@ -79,7 +79,7 @@ void Crun_post_process::post_process()
 		for(int i=0;i<distrib_diameter.distrib.size();i++)//for each slice, we print something
 				file<< distrib_diameter.value[i] <<"\t"<<distrib_diameter.distrib[i]<<"\t"<<distrib_diameter.distrib_cumul[i]<<endl; 	//to know what's plot, see the definition of the operator in profile.cpp
 		file.close();
-		// AK mod start - reactivate diameter distribution output
+		// AK mod start - reactivate diameter distribution output*/
 	}
 	
 	
