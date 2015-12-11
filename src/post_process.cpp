@@ -72,6 +72,7 @@ void Crun_post_process::post_process()
 				file<< distrib_mass.value[i] <<"\t"<<distrib_mass.distrib[i]<<"\t"<<distrib_mass.distrib_cumul[i]<<endl; 	//to know what's plot, see the definition of the operator in profile.cpp
 		file.close();
 		// AK mod end - reactivate profile & mass distribution output
+		
 		// AK mod start - reactivate diameter distribution output
 		file_name = path_to_write+"/distrib_diameter_"+i_string.str()  ;
 		file.open(file_name.c_str());
