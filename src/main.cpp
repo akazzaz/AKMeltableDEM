@@ -20,7 +20,6 @@ cout<<endl<<endl<<"Version 2013 for Integrated DEM simulations"<<endl<<endl;
     cout<<"\tCAPDEM: DEM for capillary interaction"<<endl;
     cout<<"\tTBM: DEM code for fusion blanket TBM systems"<<endl;
     cout<<"\tNORMAL: Standard input"<<endl;
-    cout<<"\tPOSTPROCESS: Post processing output files of simulations"<<endl;//AK mod - Reactivate post-processing
     cin>> BRANCH;
     
     // Boundary type: cubic box / cylidical + periodic / wall
@@ -59,16 +58,7 @@ if(BRANCH=="CREATE")
 	run.config.fprint(run.where_save);//save the final configuration
 }
 
-// AK mod start - Reactivate post-processing
-else if(BRANCH=="POSTPROCESSING")
-{
-	Crun_post_process PPrun;
-	PPrun.init();
-	PPrun.post_process();
-}
-// AK mod end - Reactivate post-processing
-
-else if(BRANCH!="CREATE")
+if(BRANCH!="CREATE")
 	{
         Crun Lrun;
 		
