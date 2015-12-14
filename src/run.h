@@ -20,7 +20,7 @@ class Crun //: public QThread //used to run parallel thread
 
     class Cevent screen;           /**<Define when should print of screen some simulation details.*/
     class Cevent save;             /**<Define when should save on file the configuration.*/
-    class Cpost_process post_process; //AK mod - make post-processing at end of run
+    //class Cpost_process post_process; //AK mod - make post-processing at end of run
   
     double t;                     /**< Current time.*/
     double tstart;                /**< Initial time at the begening of the simulation.*/
