@@ -263,6 +263,20 @@ for(config.t=tstart;config.t<tend;config.t+=dt)   //start time loop
 		if( save.should_do(config.t) ) //save if asked
 		{ 
 			config.fprint(where_save);
+			
+			//AK mod start - Generate profile and write profile
+			Cprofile profile(1, config);	//the first parameter is the size of the slice of averaging
+			
+			string prof_file;//example to write data for each saving files. Yes, it's ma pain in the ass
+			stringstream iprof_string;  iprof_string<<int(where_save.current_file);
+			ofstream file;
+			prof_file = where_save.path+"/profile_"+iprof_string.str()  ;
+			file.open(prof_file.c_str());
+			for(int is=0;is<profile.slice.size();is++)//for each slice, we print something
+			file<<profile.slice[is]; 	//to know what's plot, see the definition of the operator in profile.cpp
+			file.close();
+			//AK mod end - Generate profile and write profile
+			
 			where_save.current_file++;
 		}
 
@@ -321,8 +335,8 @@ if(config.simule_thermal_production){
 				cout<<"Work control: "<<"\t"<<config.cell.shear_work_input
 				<<"\t The system: "<<config.cell.shear_stress_in*config.cell.shear_rate<<endl;		
 			config.cell.PRINT();
-            			
-			
+
+
 		// history file
 		ofstream file;	
 		file.open(his_file.c_str(), std::ios_base::app); 
