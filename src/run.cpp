@@ -313,7 +313,7 @@ if(LIQUID_TRANSFER)
 			if(MELTING){
 	                	int nb=0, nm=0;
 	                	for(int ip=0;ip<config.P.size();ip++) {if(config.P[ip].RS < config.P[ip].R) nm++;}
-	                	for(int ic=0;ic<config.C.size();ic++) {if(config.C[ic].aB > 0) nb++;}
+	                	for(int ic=0;ic<config.C.size();ic++) {if(config.C[ic].aB > 1e-10*config.C[ic].a) nb++;} // AK mod - prevent false detection for very small numbers
 	                cout<<"Number of bonded contacts: "<<nb<<"\tNumber of melted particles: "<<nm<<endl;
 	            	}// AK mod end - display for melt and bond
 
