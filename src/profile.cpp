@@ -30,6 +30,7 @@ void Cslice::average(void)
 			if (BRANCH != "CREATE"){
 				solid_vol+=(P[ip]->RS/P[ip]->R)*volume_in_slice[ip];
 				melt_vol+=(1-(P[ip]->RS/P[ip]->R))*volume_in_slice[ip];
+			}
 			else {solid_vol+=volume_in_slice[ip];}
 			// AK mod end - Calculate volume fractions
 		}
