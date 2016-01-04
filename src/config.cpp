@@ -146,9 +146,9 @@ void Cconfig::predictor()
     
     //AK mod start - Add melt parameters: recalculate values
     for(int ip=0; ip< P.size();ip++){
-	if (P[ip].R>=0.999*P[ip].RS && BRANCH != "CREATE") parameter.full_melt_num++;
-	else if (P[ip].R<0.999*P[ip].RS && P[ip].R>=0.001*P[ip].RS && BRANCH != "CREATE") parameter.part_melt_num++;
-	else parameter.no_melt_num++;
+	if (P[ip].RS>=0.999*P[ip].R && BRANCH != "CREATE") parameter.no_melt_num++;
+	else if (P[ip].RS<0.999*P[ip].R && P[ip].RS>=0.001*P[ip].R && BRANCH != "CREATE") parameter.part_melt_num++;
+	else parameter.full_melt_num++;
 		
 	if (BRANCH != "CREATE"){parameter.melt_frac+=4.0/3.0*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3));
 	parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);}
