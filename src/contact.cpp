@@ -456,6 +456,13 @@ void Ccontact::set_me_in_main_cell()
 	file<<c.Ft<<c.Gn<<c.Gt;
 	file<<c.fn<<"\t";
 	file<<c.age<<"\t";
+	file<<c.a<<"\t";//AK addition
+	file<<c.aS<<"\t";//AK addition
+	file<<c.aB<<"\t";//AK addition
+	file<<c.deltaN<<"\t";//AK addition
+	file<<c.deltaNB<<"\t";//AK addition
+	file<<c.phi<<"\t";//AK addition
+     	file<<c.phi_solid<<"\t";//AK addition
 	file<<c.fcap<<"\t";
 //	file<<c.fwater<<"\t";
 	file<<c.dot_water_volume<<"\t";
@@ -471,6 +478,13 @@ ifstream & operator>>(ifstream &file,Ccontact &c) //input file
 	file>>c.Ft>>c.Gn>>c.Gt;
 	file>>c.fn;
 	file>>c.age;
+	file>>c.a;//AK addition
+	file>>c.aS;//AK addition
+	file>>c.aB;//AK addition
+	file>>c.deltaN;//AK addition
+	file>>c.deltaNB;//AK addition
+	file>>c.phi;//AK addition
+     	file>>c.phi_solid;//AK addition
 	file>>c.fcap;
 	file>>c.dot_water_volume;
 	return file;
