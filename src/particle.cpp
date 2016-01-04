@@ -302,7 +302,8 @@ ofstream & operator<<(ofstream &file,Cparticle p)
     else if(BRANCH=="TBM")
         file<<p.T<<"\t"<<p.water_volume; //scalar
     else
-    file<<p.saturation<<"\t"<<p.water_volume; //scalar
+    	{file>>p.saturation>>p.water_volume;	//scalar
+        file>>p.T>>p.phi;} //AK Addition
 
     file<<endl;	//new line
  	return file;
@@ -319,7 +320,10 @@ ifstream & operator>>(ifstream &file,Cparticle &p)
        else if(BRANCH=="LIB")
         file>>p.T>>p.water_volume;	//scalar
        else
-          file>>p.saturation>>p.water_volume;	//scalar
+          {file>>p.saturation>>p.water_volume;	//scalar
+          file>>p.void_volume>>p.grain_volume;
+          file>>p.T>>p.phi;} //AK Addition
+          
     
  	return file;
 }
