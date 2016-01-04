@@ -303,6 +303,7 @@ ofstream & operator<<(ofstream &file,Cparticle p)
         file<<p.T<<"\t"<<p.water_volume; //scalar
     else
     	{file>>p.saturation>>p.water_volume;	//scalar
+        file>>p.void_volume>>p.grain_volume; //AK Addition
         file>>p.T>>p.phi;} //AK Addition
 
     file<<endl;	//new line
@@ -321,7 +322,7 @@ ifstream & operator>>(ifstream &file,Cparticle &p)
         file>>p.T>>p.water_volume;	//scalar
        else
           {file>>p.saturation>>p.water_volume;	//scalar
-          file>>p.void_volume>>p.grain_volume;
+          file>>p.void_volume>>p.grain_volume; //AK Addition
           file>>p.T>>p.phi;} //AK Addition
           
     
