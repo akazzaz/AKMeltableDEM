@@ -130,43 +130,7 @@ if(LIQUID_TRANSFER){
 }
 
 void Cconfig::predictor()
-{
-    //AK mod start - Add melt & bond parameters: reset values
-    parameter.full_melt_num=0;
-    parameter.part_melt_num=0;
-    parameter.no_melt_num=0;
-	
-    parameter.melt_frac=0.0;
-    parameter.solid_frac=0.0;
-	
-    parameter.coord_num=2*C.size()/P.size();
-    parameter.bond_average=0.0;
-    parameter.bond_area_average=0.0;
-    //AK mod end - Add melt & bond parameters: reset values
-    
-    //AK mod start - Add melt parameters: recalculate values
-    for(int ip=0; ip< P.size();ip++){
-	if (P[ip].RS>=0.999*P[ip].R && BRANCH != "CREATE") parameter.no_melt_num++;
-	else if (P[ip].RS<0.999*P[ip].R && P[ip].RS>=0.001*P[ip].R && BRANCH != "CREATE") parameter.part_melt_num++;
-	else parameter.full_melt_num++;
-		
-	if (BRANCH != "CREATE"){parameter.melt_frac+=4.0/3.0*PI*(pow(P[ip].R,3)-pow(P[ip].RS,3));
-	parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);}
-	else {parameter.solid_frac+=4.0/3.0*PI*pow(P[ip].RS,3);}
-    }
-    parameter.melt_frac/=cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]);
-    parameter.solid_frac/=cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]);
-    parameter.void_frac=1-parameter.melt_frac-parameter.solid_frac;
-    //AK mod end - Add melt parameters: recalculate values
-    
-    //AK mod start - Add bond parameters: recalculate values
-    for(int ic=0;ic<C.size();ic++){
-	if (C[ic].aB>0){parameter.bond_average++;parameter.bond_area_average+=PI*pow(C[ic].aB,2);}
-    }
-    parameter.bond_area_average/=parameter.bond_average>0?parameter.bond_average:1;
-    parameter.bond_average*=2/P.size();
-    //AK mod end - Add bond parameters: recalculate values
-	
+{	
     if(cell.vibration_control){
         double B0 = 2.0*PI*cell.cell_vibration_freq;
         cell.cell_velocity =  cell.cell_vibration_amplitude * cos(B0* t)*B0;
