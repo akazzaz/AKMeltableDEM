@@ -317,8 +317,8 @@ if(LIQUID_TRANSFER)
 							if(config.P[ip].RS < config.P[ip].R && config.P[ip].RS > 0.) np++;
 							else if (config.P[ip].RS = 0.) nf++;
 							
-							m_frac+=(4.0/3.0*PI*(pow(config.P[ip].R,3)-pow(config.P[ip].RS,3)))/(config.cell.L.x[0]*config.cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
-							s_frac+=4.0/3.0*PI*pow(config.P[ip].RS,3)/(config.cell.L.x[0]*config.cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));}
+							m_frac+=(4.0/3.0*PI*(pow(config.P[ip].R,3)-pow(config.P[ip].RS,3)))/(config.cell.L.x[0]*config.cell.L.x[1]*(PSEUDO_2D?1:config.cell.L.x[2]));
+							s_frac+=4.0/3.0*PI*pow(config.P[ip].RS,3)/(config.cell.L.x[0]*config.cell.L.x[1]*(PSEUDO_2D?1:config.cell.L.x[2]));
 						}
 	                	for(int ic=0;ic<config.C.size();ic++) {if(config.C[ic].aB > 1e-10*config.C[ic].a) {nb++;aB_av+=PI*pow(config.C[ic].aB,2);}} // AK mod - prevent false detection for very small numbers
 	                
