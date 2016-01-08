@@ -152,7 +152,7 @@ void Cconfig::predictor()
      {
      	if (C[ic].aB>1e-10*C[ic].aS) {nb++;AB_av+=PI*pow(C[ic].aB,2);}
      }
-     AB_av/=nb>0?nb:0;
+     AB_av/=nb>0?nb:1;
      
      parameter.full_melt_num=fm;
      parameter.part_melt_num=pm;
