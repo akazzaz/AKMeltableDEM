@@ -311,34 +311,10 @@ if(LIQUID_TRANSFER)
 //			cout<<"Number of bonded contacts: "<<nc<<"\tNumber of melted particles: "<<np<<endl;
 			// AK mod start - display for melt and bond
 			if(MELTING){
-	                	int nf=0, np=0, nb=0;
-						double aB_av=0, m_frac=0,s_frac=0;
-						for(int ip=0;ip<config.P.size();ip++) {
-							if(config.P[ip].RS < config.P[ip].R && config.P[ip].RS > 0.) np++;
-							else if (config.P[ip].RS = 0.) nf++;
-							
-							m_frac+=(4.0/3.0*PI*(pow(config.P[ip].R,3)-pow(config.P[ip].RS,3)))/(config.cell.L.x[0]*config.cell.L.x[1]*(PSEUDO_2D?1:config.cell.L.x[2]));
-							s_frac+=4.0/3.0*PI*pow(config.P[ip].RS,3)/(config.cell.L.x[0]*config.cell.L.x[1]*(PSEUDO_2D?1:config.cell.L.x[2]));
-						}
-	                	for(int ic=0;ic<config.C.size();ic++) {if(config.C[ic].aB > 1e-10*config.C[ic].aS) {nb++;aB_av+=PI*pow(config.C[ic].aB,2);}} // AK mod - prevent false detection for very small numbers
-	                
-					config.parameter.melt_frac=m_frac;
-					config.parameter.solid_frac=s_frac;
-					config.parameter.void_frac=1-m_frac-s_frac;
-					
-					config.parameter.full_melt_num=nf;
-					config.parameter.part_melt_num=np;
-					config.parameter.no_melt_num=config.P.size()-nf-np;
-					
-					config.parameter.bond_average=2*nb/config.P.size();
-					config.parameter.bond_area_average=aB_av/(nb>0?nb:1);
-					config.parameter.coord_num=2*config.C.size()/config.P.size();
-					
-					cout<<"Number of bonded contacts: "<<nb<<"\tNumber of melted particles: "<<(nf+np)<<endl;
-					cout<<"Number of fully melted particles: "<<nf<<"\tNumber of partly melted particles: "<<np<<endl;
-					cout<<"Melt V Frac: "<<m_frac<<"\tSolid V Frac: "<<s_frac<<"\tVoid V Frac: "<<(1-m_frac-s_frac)<<endl;
-					cout<<"Coordination number: "<<config.parameter.coord_num<<"\tAverage bonds: "<<config.parameter.bond_average<<endl;
-					
+	                	cout<<"Number of bonded contacts: "<<(config.parameter.bond_average*config.P.size()/2)<<"\tNumber of melted particles: "<<(config.parameter.full_melt_num+config.parameter.part_melt_num)<<endl;
+				cout<<"Number of fully melted particles: "<<config.parameter.full_melt_num<<"\tNumber of partly melted particles: "<<config.parameter.part_melt_num<<endl;
+				cout<<"Melt V Frac: "<config.parameter.melt_frac<<"\tSolid V Frac: "<<config.parameter.solid_frac<<"\tVoid V Frac: "<<config.parameter.void_frac<<endl;
+				cout<<"Coordination number: "<<config.parameter.coord_num<<"\tAverage bonds: "<<config.parameter.bond_average<<endl;
 	            	}// AK mod end - display for melt and bond
 
 if(LIQUID_TRANSFER)
