@@ -23,17 +23,6 @@ void Crun::init_packing()
 	config.parameter.FIXED_SATURATION = 0.5;
 	config.parameter.CONTACT_ANGLE = PI/4.0;
 	
-	//AK Addition begin - initilise new parameter variables to zero
-	config.parameter.melt_frac=0;
-	config.parameter.solid_frac=0;
-	config.parameter.void_frac=0;
-	config.parameter.full_melt_num=0;
-	config.parameter.part_melt_num=0;
-	config.parameter.no_melt_num=0;
-	config.parameter.bond_average=0;
-	config.parameter.bond_area_average=0;
-	config.parameter.coord_num=0;
-	//AK Addition end - initilise new parameter variables to zero
 	cout<<"Initial packing process started"<<endl<<endl;
 	//time_step
 	config.parameter.dimensionless_number(config.cell,config.P); //typical time scale and  dimensionless numbers
