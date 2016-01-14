@@ -47,6 +47,11 @@ class Ccontact
     double aS; /**< Radius of the interacting region: solid.*/
 	double age;/**< Age of the contact.*/
 	
+	/*AK addition - overlap volumes*/
+	double VdeltaNm /**< volume of melt overalp.*/
+	double VdeltaNs /**<volume of solid overlap.*/
+	/*AK addition - end*/
+	
 	double E;
 	double ct,cr;
 	double mu;
