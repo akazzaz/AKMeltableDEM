@@ -133,6 +133,12 @@ void Ccontact::increment_force(double dt)
 	E = ( pA->E*pB->E)/(pA->E+pB->E);//geometric mean
 			
 	deltaNS = deltaN + (pA->R - pA->RS) + (pB->R - pB->RS); 
+	
+	/*AK addition - Calculate overlap volumes*/
+	VdeltaNs=PI/(12*dx)*pow((pA->RS+pB->RS-dx),2)*(pow(dx,2)+2*dx*pA->RS+2*dx*pB->RS-3*pow(pA->RS,2)-3*pow(pB->RS,2)+6*pA->RS*pB->RS);
+	VdeltaNm=PI/(12*dx)*pow((pA->R+pB->R-dx),2)*(pow(dx,2)+2*dx*pA->R+2*dx*pB->R-3*pow(pA->R,2)-3*pow(pB->R,2)+6*pA->R*pB->R)-VdeltaNs;
+	/*AK addition - end*/
+	
 	RSeff = pA->RS*pB->RS/(pA->RS+pB->RS); // effective solid contact radius
 	
 	// with solid contact, otherwise only molten contact	
