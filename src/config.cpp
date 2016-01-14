@@ -134,6 +134,7 @@ void Cconfig::predictor()
       //AK mod start - Add melt & bond parameters
      int pm=0, fm=0, nb=0;
      double mf=0, sf=0, AB_av=0;
+     double mf_olap=0, sf_olap=0;
      
      for(int ip=0; ip< P.size();ip++)
      {
@@ -151,6 +152,14 @@ void Cconfig::predictor()
      for(int ic=0;ic<C.size();ic++)
      {
      	if (C[ic].aB>1e-10*C[ic].aS) {nb++;AB_av+=PI*pow(C[ic].aB,2);}
+     	//Calculate volume fraction of overlaps
+     	if (BRANCH != "CREATE"){
+     		sf_olap+=C[ic].VdeltaNs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
+     		mf_olap+=C[ic].VdeltaNm/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
+     	}
+     	else {
+     		sf_olap+=C[ic].VdeltaNs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
+     	}
      }
      AB_av/=nb>0?nb:1;
      
@@ -158,9 +167,9 @@ void Cconfig::predictor()
      parameter.part_melt_num=pm;
      parameter.no_melt_num=P.size()-fm-pm;
  	
-     parameter.melt_frac=mf;
-     parameter.solid_frac=sf;
-     parameter.void_frac=1.0-mf-sf;
+     parameter.melt_frac=mf-mf_olap;
+     parameter.solid_frac=sf-sf_olap;
+     parameter.void_frac=1.0-mf-sf+mf_olap+sf_olap;
  	
      parameter.coord_num=2*C.size()/P.size();
      parameter.bond_average=2*nb/P.size();
