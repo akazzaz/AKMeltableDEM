@@ -12,10 +12,9 @@ class Cslice
 	double solid_frac;	/** Solid volume fraction in slice.*/
 	double void_frac;	/** Void volume fraction in slice.*/
 	//AK mod end - Volume fractions
-	//AK mod start - Stress values
-	double sig_xy; /** Shear Stress.*/
-	double sig_yy; /** Normal Stress.*/
-	//AK mod end - Stress values
+	//AK mod start - Stress matrix
+	Cmatrix stress;
+	//AK mod end - Stress matrix
 	Cvector V;						/**<Average particle velocity.*/
 	double frac_solid; 				/**<Average solid fraction.*/
 	double T;						/**<Average particle temperature.*/
