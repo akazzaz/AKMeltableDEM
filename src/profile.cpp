@@ -10,6 +10,10 @@ ofstream & operator<<(ofstream &file,Cslice s)
 	file<<s.frac_solid<<"\t";
 	file<<s.V;
 	file<<s.T<<"\t";
+	// AK mod start - stress
+	file<<s.stress[1][1]<<"\t";
+	file<<s.stress[1][0]<<"\t";
+	// AK mod start - stress
 	file<<endl;	//new line
  	return file;
 }
@@ -42,6 +46,15 @@ void Cslice::average(void)
 	solid_frac=solid_vol/vol_slice;
 	void_frac=1-melt_frac-solid_frac;
 	// AK mod end - Calculate volume fractions
+	// AK mod start - Calculate stress tensor
+	for(int i=0;i<DIM;i++) for(int j=0;j<DIM;j++) stress[i][j]=0.;
+	for(int ic=0;ic<config.C.size();ic++) for(int ip=0;ip<P.size();ip++) {
+		if(config.C[ic].A==P[ip]->id || config.C[ic].B==P[ip]->id){
+			stress+=config.C[ic].F| config.C[ic].dX;
+		}
+	}
+	stress/=volume_total_in_slice;
+	// AK mod end - Calculate stress tensor
 }
 
 
