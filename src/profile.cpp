@@ -47,13 +47,9 @@ void Cslice::average(void)
 	void_frac=1-melt_frac-solid_frac;
 	// AK mod end - Calculate volume fractions
 	// AK mod start - Calculate stress tensor
-	for(int i=0;i<DIM;i++) for(int j=0;j<DIM;j++) stress[i][j]=0.;
-	for(int ic=0;ic<config.C.size();ic++) for(int ip=0;ip<P.size();ip++) {
-		if(config.C[ic].A==P[ip]->id || config.C[ic].B==P[ip]->id){
-			stress+=config.C[ic].F| config.C[ic].dX;
-		}
-	}
-	stress/=volume_total_in_slice;
+	Cmatrix sigma;
+	for(int ic=0;ic<C.size();ic++) sigma+=(C[ic]->F| C[ic]->dX)*Cfrac[ic];
+	stress=sigma/volume_total_in_slice;
 	// AK mod end - Calculate stress tensor
 }
 
@@ -111,6 +107,31 @@ Cprofile::Cprofile(double step_target,Cconfig config)
 				
 		}
 //end dispach_particle_in_slice();
+// AK mod start - dispatch contacts in slice
+	for(int ic=0; ic <config.C.size();ic++ )
+		if(config.C[ic].pA->AM_I_BOUNDARY==0 && config.C[ic].pB->AM_I_BOUNDARY==0)//only flowing particles
+		{
+			double yA = config.C[ic].pA->X.x[1] + config.cell.L.x[1]/2.;
+			double yB = config.C[ic].pB->X.x[1] + config.cell.L.x[1]/2.;
+			
+			double ymin = yA<yB?yA:yB;
+			double ymax = yA<yB?yB:yA;
+	
+			int imin = (int)(ymin/step);
+			int imax = (int)(ymax/step);
+			
+			for(int islice=imin;islice<=imax;islice++)
+				{
+					slice[islice].C.push_back(&config.C[ic]);//get the contact into the slice
+				
+					if (ymin>=islice*step && ymax>=(islice+1)*step){slice[islice].Cfrac.push_back(((islice+1)*step-ymin)/(ymax-ymin));}
+					else if (ymin<=islice*step && ymax<=(islice+1)*step){slice[islice].Cfrac.push_back((ymin-islice*step)/(ymax-ymin));}
+					else if (ymin<=islice*step && ymax>=(islice+1)*step){slice[islice].Cfrac.push_back(step/(ymax-ymin));}
+					else {slice[islice].Cfrac.push_back(1.0);}
+				}
+				
+		}
+	//AK mod end - dispatch contact in slice
 
 	for(int is=0;is<slice.size();is++) slice[is].average();
 }
