@@ -11,8 +11,8 @@ ofstream & operator<<(ofstream &file,Cslice s)
 	file<<s.V;
 	file<<s.T<<"\t";
 	// AK mod start - stress
-	file<<s.stress[1][1]<<"\t";
-	file<<s.stress[1][0]<<"\t";
+	file<<s.stress.x[1][1]<<"\t";
+	file<<s.stress.x[1][0]<<"\t";
 	// AK mod start - stress
 	file<<endl;	//new line
  	return file;
