@@ -21,6 +21,9 @@ class Cslice
 	double Y; 						/**< y position of the middle of the slice.*/
 	double vol_slice;				/**< Volume of the slice.*/
 	std::vector <Cparticle *> P;			/**< list of particle (pointers) that have a piece of volume in the slice.*/
+	//AK mod start - Contact vector & volume fraction
+	std::vector <Ccontact *> C;			/**< list of contact (pointers) that have particles with a piece of volume in the slice.*/
+	std::vector <double> Cfrac; /**< Fraction of contact force to allocate to slice based on volume fraction of particles in slice.*/
 	std::vector <double> volume_in_slice; /**< list of particle volume that belong to the slice.*/
 	void average();
 	Cslice(){frac_solid=0;T=0;};//initialise in constructor	
