@@ -135,6 +135,7 @@ void Cconfig::predictor()
      int pm=0, fm=0, nb=0;
      double mf=0, sf=0, AB_av=0;
      double mf_olap=0, sf_olap=0;
+     double OlapVs=0.0, OlapVm=0.0;
      
      for(int ip=0; ip< P.size();ip++)
      {
@@ -154,11 +155,13 @@ void Cconfig::predictor()
      	if (C[ic].aB>1e-10*C[ic].aS) {nb++;AB_av+=PI*pow(C[ic].aB,2);}
      	//Calculate volume fraction of overlaps
      	if (BRANCH != "CREATE"){
-     		sf_olap+=C[ic].VdeltaNs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
-     		mf_olap+=C[ic].VdeltaNm/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
+     		OlapVs=PI/(12*C[ic].dx)*pow((C[ic].pA->RS+C[ic].pB->RS-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->RS+2*C[ic].dx*C[ic].pB->RS-3*pow(C[ic].pA->RS,2)-3*pow(C[ic].pB->RS,2)+6*C[ic].pA->RS*C[ic].pB->RS);
+     		OlapVm=PI/(12*C[ic].dx)*pow((C[ic].pA->R+C[ic].pB->R-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->R+2*C[ic].dx*C[ic].pB->R-3*pow(C[ic].pA->R,2)-3*pow(C[ic].pB->R,2)+6*C[ic].pA->R*C[ic].pB->R)-OlapVm;
+     		sf_olap+=OlapVs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
+     		mf_olap+=OlapVm/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
      	}
      	else {
-     		sf_olap+=C[ic].VdeltaNs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
+     		sf_olap+=OlapVs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
      	}
      }
      AB_av/=nb>0?nb:1;
