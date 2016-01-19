@@ -156,7 +156,7 @@ void Cconfig::predictor()
      	//Calculate volume fraction of overlaps
      	if (BRANCH != "CREATE"){
      		OlapVs=PI/(12*C[ic].dx)*pow((C[ic].pA->RS+C[ic].pB->RS-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->RS+2*C[ic].dx*C[ic].pB->RS-3*pow(C[ic].pA->RS,2)-3*pow(C[ic].pB->RS,2)+6*C[ic].pA->RS*C[ic].pB->RS);
-     		OlapVm=PI/(12*C[ic].dx)*pow((C[ic].pA->R+C[ic].pB->R-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->R+2*C[ic].dx*C[ic].pB->R-3*pow(C[ic].pA->R,2)-3*pow(C[ic].pB->R,2)+6*C[ic].pA->R*C[ic].pB->R)-OlapVm;
+     		OlapVm=PI/(12*C[ic].dx)*pow((C[ic].pA->R+C[ic].pB->R-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->R+2*C[ic].dx*C[ic].pB->R-3*pow(C[ic].pA->R,2)-3*pow(C[ic].pB->R,2)+6*C[ic].pA->R*C[ic].pB->R)-OlapVs;
      		sf_olap+=OlapVs/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
      		mf_olap+=OlapVm/(cell.L.x[0]*cell.L.x[1]*(PSEUDO_2D?1:cell.L.x[2]));
      	}
