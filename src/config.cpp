@@ -166,17 +166,17 @@ void Cconfig::predictor()
      }
      AB_av/=nb>0?nb:1;
      
-     parameter.full_melt_num=fm;
-     parameter.part_melt_num=pm;
-     parameter.no_melt_num=P.size()-fm-pm;
+     parameter.full_melt_num=fm>0?fm:0;
+     parameter.part_melt_num=pm>0?pm:0;
+     parameter.no_melt_num=(P.size()-fm-pm)>0?(P.size()-fm-pm):0;
  	
-     parameter.melt_frac=mf-mf_olap;
-     parameter.solid_frac=sf-sf_olap;
-     parameter.void_frac=1.0-mf-sf+mf_olap+sf_olap;
+     parameter.melt_frac=(mf-mf_olap)>0.0?(mf-mf_olap):0.0;
+     parameter.solid_frac=(sf-sf_olap)>0.0?(sf-sf_olap):0.0;
+     parameter.void_frac=(1.0-mf-sf+mf_olap+sf_olap)>0.0?(1.0-mf-sf+mf_olap+sf_olap):0.0;
  	
-     parameter.coord_num=2*C.size()/P.size();
-     parameter.bond_average=2*nb/P.size();
-     parameter.bond_area_average=AB_av;
+     parameter.coord_num=(2.0*C.size()/P.size()>0.0 && P.size()>0.0)?(2.0*C.size()/P.size()):0.0;
+     parameter.bond_average=(2.0*nb/P.size()>0.0 && P.size()>0.0)?(2.0*nb/P.size()):0.0;
+     parameter.bond_area_average=AB_av>1e-10?AB_av:0.0;
      //AK mod end - Add melt & bond parameters
  	
     if(cell.vibration_control){
