@@ -47,7 +47,7 @@ void Cslice::average(void)
 	for(int ic=0;ic<C.size();ic++) {
 		olapVsi=PI/(12*C[ic]->dx)*pow((C[ic]->pA->RS+C[ic]->pB->RS-C[ic]->dx),2)*(pow(C[ic]->dx,2)+2*C[ic]->dx*C[ic]->pA->RS+2*C[ic]->dx*C[ic]->pB->RS-3*pow(C[ic]->pA->RS,2)-3*pow(C[ic]->pB->RS,2)+6*C[ic]->pA->RS*C[ic]->pB->RS);
      		olapVs+=olapVsi;
-     		olapVm+=PI/(12*C[ic]->dx)*pow((C[ic]->pA->R+C[ic]->pB->R-C[ic]->dx),2)*(pow(C[ic]->dx,2)+2*C[ic]->dx*C[ic]->pA->R+2*C[ic]->dx*C[ic]->pB->R-3*pow(C[ic]->pA->R,2)-3*pow(C[ic]->pB->R,2)+6*C[ic]->pA->R*C[ic]->pB->R)-OlapVsi;
+     		olapVm+=PI/(12*C[ic]->dx)*pow((C[ic]->pA->R+C[ic]->pB->R-C[ic]->dx),2)*(pow(C[ic]->dx,2)+2*C[ic]->dx*C[ic]->pA->R+2*C[ic]->dx*C[ic]->pB->R-3*pow(C[ic]->pA->R,2)-3*pow(C[ic]->pB->R,2)+6*C[ic]->pA->R*C[ic]->pB->R)-olapVsi;
 		sigma+=(C[ic]->F| C[ic]->dX)*Cfrac[ic];
 	}
 	stress=sigma/volume_total_in_slice;
