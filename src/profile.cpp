@@ -24,6 +24,7 @@ void Cslice::average(void)
 	// AK mod start - Calculate volume fractions
 	double melt_vol=0;
 	double solid_vol=0;
+	double olapVs=0, olapVsi=0, olapVm=0;
 	// AK mod end - Calculate volume fractions
 	for(int ip=0;ip<P.size();ip++)
 		{
@@ -41,16 +42,21 @@ void Cslice::average(void)
 	frac_solid = volume_total_in_slice/vol_slice;
 	T/=volume_total_in_slice;
 	V/=volume_total_in_slice;
-	// AK mod start - Calculate volume fractions
-	melt_frac=melt_vol/vol_slice;
-	solid_frac=solid_vol/vol_slice;
-	void_frac=1-melt_frac-solid_frac;
-	// AK mod end - Calculate volume fractions
 	// AK mod start - Calculate stress tensor
 	Cmatrix sigma;
-	for(int ic=0;ic<C.size();ic++) sigma+=(C[ic]->F| C[ic]->dX)*Cfrac[ic];
+	for(int ic=0;ic<C.size();ic++) {
+		olapVsi=PI/(12*C[ic].dx)*pow((C[ic].pA->RS+C[ic].pB->RS-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->RS+2*C[ic].dx*C[ic].pB->RS-3*pow(C[ic].pA->RS,2)-3*pow(C[ic].pB->RS,2)+6*C[ic].pA->RS*C[ic].pB->RS);
+     		olapVs+=olapVsi;
+     		olapVm+=PI/(12*C[ic].dx)*pow((C[ic].pA->R+C[ic].pB->R-C[ic].dx),2)*(pow(C[ic].dx,2)+2*C[ic].dx*C[ic].pA->R+2*C[ic].dx*C[ic].pB->R-3*pow(C[ic].pA->R,2)-3*pow(C[ic].pB->R,2)+6*C[ic].pA->R*C[ic].pB->R)-OlapVsi;
+		sigma+=(C[ic]->F| C[ic]->dX)*Cfrac[ic];
+	}
 	stress=sigma/volume_total_in_slice;
 	// AK mod end - Calculate stress tensor
+	// AK mod start - Calculate volume fractions
+	melt_frac=((melt_vol-olapVm)>0.0?(melt_vol-olapVm):0.0)/vol_slice;
+	solid_frac=((solid_vol-olapVs)>0.0?(solid_vol-olapVs):0.0)/vol_slice;
+	void_frac=(1-melt_frac-solid_frac)>0.0?(1-melt_frac-solid_frac):0.0;
+	// AK mod end - Calculate volume fractions
 }
 
 
