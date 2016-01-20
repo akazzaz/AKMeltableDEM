@@ -265,7 +265,7 @@ for(config.t=tstart;config.t<tend;config.t+=dt)   //start time loop
 			config.fprint(where_save);
 			
 			//AK mod start - Generate profile and write profile
-			Cprofile profile((config.cell.L.x[1]/5), config);	//the first parameter is the size of the slice of averaging
+			Cprofile profile((config.cell.L.x[1]/10), config);	//the first parameter is the size of the slice of averaging
 			
 			string prof_file;//example to write data for each saving files. Yes, it's ma pain in the ass
 			stringstream iprof_string;  iprof_string<<int(where_save.current_file);
