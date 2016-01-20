@@ -34,9 +34,10 @@ void  Cconfig::update_particle()
         if(parameter.init_temperature.x[2] != 0.0)
             P[ip].T = parameter.init_temperature.x[2];
 		P[ip].Tdot = 0.0;
-	}
+	
 	if (cell.shear_rate!=0 && cell.boundary=="PERIODIC_SHEAR"){
 		P[ip].V.x[0]=(P[ip].X.x[1]/(0.5*cell.L.x[1]))*cell.shear_rate*cell.L.x[1];
+	}
 	}
 }
 
