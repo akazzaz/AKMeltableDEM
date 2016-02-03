@@ -454,6 +454,7 @@ void Ccontact::set_me_in_main_cell()
  }
  else{
  	file<<c.A<<"\t"<<c.B<<"\t"; //c 1-2
+	file<<c.E<<"\t"; //AK Addition
 	file<<c.Ft<<c.Gn<<c.Gt;
 	file<<c.fn<<"\t";
 	file<<c.age<<"\t";
@@ -476,6 +477,7 @@ ifstream & operator>>(ifstream &file,Ccontact &c) //input file
 {
 	file>>c.A;
 	file>>c.B;
+	file<<c.E<<"\t"; //AK Addition
 	file>>c.Ft>>c.Gn>>c.Gt;
 	file>>c.fn;
 	file>>c.age;
@@ -490,4 +492,3 @@ ifstream & operator>>(ifstream &file,Ccontact &c) //input file
 	file>>c.dot_water_volume;
 	return file;
  }
-
