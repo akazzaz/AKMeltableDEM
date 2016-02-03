@@ -477,7 +477,7 @@ ifstream & operator>>(ifstream &file,Ccontact &c) //input file
 {
 	file>>c.A;
 	file>>c.B;
-	file<<c.E<<"\t"; //AK Addition
+	file>>c.E; //AK Addition
 	file>>c.Ft>>c.Gn>>c.Gt;
 	file>>c.fn;
 	file>>c.age;
