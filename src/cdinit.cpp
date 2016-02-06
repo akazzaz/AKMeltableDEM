@@ -6,16 +6,16 @@ void  Cconfig::update_particle()
 	for(int ip=0;ip<P.size();ip++)
 	{
 		if(ip<parameter.COMP_FRACTION){ // Spiece-1: Biotite
-				P[ip].Tm = 21.0;
+				P[ip].Tm = 25.0; //21.0;
 				P[ip].Lm = 5.0;
 				P[ip].k = parameter.bulk_conductivity;
 				P[ip].E = parameter.MODULE_N;
 		}
 		else { // Speice-2: Quartz, Plagioclase, K-feldstar
 			P[ip].Tm = 25.0;
-			P[ip].Lm = 3.0;
-			P[ip].k = 5.0*parameter.bulk_conductivity;
-			P[ip].E = parameter.MODULE_N / 10.0;
+			P[ip].Lm = 5.0;//3.0;
+			P[ip].k = parameter.bulk_conductivity;
+			P[ip].E = parameter.MODULE_N; // / 10.0;
 		}
 		P[ip].m = 4./3. * PI * pow(P[ip].R,3)*parameter.RHO;
 		P[ip].c = parameter.specific_heat;
