@@ -7,7 +7,7 @@ class Ccell
 {
 	
 	public:  
-  
+  	double t; //AK addition - total simulation time
 	string boundary;/**< Type of boundary condition, value can be PERIODIC_SHEAR, WALL_INCLINED, WALL_SHEAR*/
 	Cvector L; 		/**< Size of the cell*/ 
 
