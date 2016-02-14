@@ -13,6 +13,7 @@
 Ccell::Ccell()//initialisation
 {
 
+	t=1e-10; //AK addition - total time of simulation
 	mass=0.0;  
 	normal_stress_ext=0.0;
 	shear_stress_ext=0.0;
@@ -121,7 +122,7 @@ void Ccell::predictor(double dt,double dt2_on_2)
 //	}
 	if(!shear_stress_control && !shear_work_control) //if the shear rate is controled
 	{
-			Vshear=shear_rate*L.x[1];
+			Vshear=shear_rate*L.x[1]*exp(-100/t);//AK addition - ramp shear rate
 			Xshift+=Vshear*dt;
 	}
 // ????? BUG
@@ -132,7 +133,7 @@ void Ccell::predictor(double dt,double dt2_on_2)
 	if(Xshift<-L.x[0]/2.0) Xshift += L.x[0];		//rescale in the box x size
 	else if(Xshift>=L.x[0]/2.0) Xshift -= L.x[0];
 
-	cumul_strain+= shear_rate*dt;
+	cumul_strain+= shear_rate*dt*(!shear_stress_control && !shear_work_control?exp(-100/t):1.0);//AK Addition - ramp shear rate
 }
 
 void Ccell::corrector(double dt_on_2) 
@@ -153,13 +154,13 @@ void Ccell::corrector(double dt_on_2)
 	dstress = (-normal_stress_ext-normal_stress_in);
     double dt = dt_on_2 *2.0;
 	// YG code end
-
+	t+=dt; //AK addition - update total simulation time
 	
 	if(normal_stress_control)//if the normal stress is controled
 	{
 		// PR impl. of normal stress control
 		Adilat_p = Adilat;
-		Adilat   = (-normal_stress_ext-normal_stress_in)/mass;
+		Adilat   = (-normal_stress_ext*exp(-100/t)-normal_stress_in)/mass;//AK addition - ramp external stress
 		Vdilat  += (Adilat-Adilat_p)*dt_on_2;
 		if( Vdilat < -DILAT_LIMIT*L.x[1]) Vdilat= -DILAT_LIMIT*L.x[1]; //limit cell velocity
 		else if(Vdilat >  DILAT_LIMIT*L.x[1]) Vdilat=  DILAT_LIMIT*L.x[1]; //limit cell velocity
@@ -243,10 +244,10 @@ if(boundary=="PERIODIC_SHEAR") cout<<"\tPlane shear without wall: x,y and z dire
 if(boundary=="WALL_SHEAR") cout<<"\tShear with wall: bottom and top walls, x and z directions are periodic"<<endl;
 if(boundary=="PERIODIC_TILT") cout<<"\tPeriodic tilt: x y and z directions are periodic. Tilt angle:\t"<<slope<<endl;
 
-if(normal_stress_control) cout<<"\tNormal stress is controlled:\t"<<normal_stress_ext<<endl;
+if(normal_stress_control) cout<<"\tNormal stress is controlled:\t"<<normal_stress_ext*exp(-100/t)<<endl;// AK addition - ramp normal stress
 else	cout<<"\tNormal stress is not controlled: constant volume"<<endl;
 if(shear_stress_control)cout<<"\tShear stress is controlled:\t"<<shear_stress_ext<<endl;	
-else cout<<"\tShear rate is controlled:\t"<<shear_rate<<endl;	
+else cout<<"\tShear rate is controlled:\t"<<shear_rate*exp(-100/t)<<endl;// AK addition - ramp shear rate	
 cout<<"\tNormal/Shear stress inside:\t"<<normal_stress_in<<"/"<<shear_stress_in<<endl;
     cout<<"\tEffective stress inside:\t"<<stressEff.x[1][1]<<"/"<<stressEff.x[0][1]<<endl;
     
@@ -265,8 +266,8 @@ ofstream & operator<<(ofstream &file,Ccell c)
 	
 	file<<c.L;
 	file<<c.boundary<<"\t"<<c.mass<<"\t";
-	file<<c.normal_stress_ext<<"\t"<<c.shear_stress_ext<<"\t"<<c.normal_stress_in<<"\t"<<c.shear_stress_in<<"\t";
-	file<<c.shear_rate<<"\t"<<c.dilat_rate<<"\t"<<c.cumul_strain<<"\t";
+	file<<c.normal_stress_ext*(c.normal_stress_control?exp(-100/c.t):1)<<"\t"<<c.shear_stress_ext<<"\t"<<c.normal_stress_in<<"\t"<<c.shear_stress_in<<"\t";//AK addition - ramp normal stress
+	file<<c.shear_rate(!c.shear_stress_control && !c.shear_work_control?exp(-100/c.t):1)<<"\t"<<c.dilat_rate<<"\t"<<c.cumul_strain<<"\t";//AK addition - ramp shear rate
 	file<<c.Ashear<<"\t"<<c.Adilat<<"\t"<<c.Vshear<<"\t"<<c.Vdilat<<"\t";
 	file<<c.normal_stress_control<<"\t"<<c.shear_stress_control<<"\t";
 	file<<c.DeltaT<<"\t"<<c.gradT<<"\t"<<c.Xshift<<"\t"<<c.gradT_control<<"\t";
