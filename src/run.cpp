@@ -340,7 +340,8 @@ if(config.simule_thermal_production){
 		// history file
 		ofstream file;	
 		file.open(his_file.c_str(), std::ios_base::app); 
-		file<<config.t<<"\t"<<config.cell.Xshift<<"\t"<<config.cell.L.x[1]<<"\t"
+		//file<<config.t<<"\t"<<config.cell.Xshift<<"\t"<<config.cell.L.x[1]<<"\t"
+		file<<config.t<<"\t"<<config.cell.cumul_strain<<"\t"<<config.cell.L.x[1]<<"\t"// Export cumulative strain instead of x-sift
 		<<config.cell.stress.x[1][1]<<"\t"<<config.cell.stress.x[1][0]
             <<"\t"<<config.parameter.average_temperature
             <<"\t"<<config.cap_pressure_mid*1.0/config.parameter.SURFACE_TENSION // AK mod - switch on cap pressure
