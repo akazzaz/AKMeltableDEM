@@ -183,7 +183,7 @@ void Ccell::corrector(double dt_on_2)
 	{
 		Ashear_p =  Ashear;
 		double DAMP = WALL_DAMP *Vshear;;
-		Ashear 	 =  (shear_stress_ext - shear_stress_in - DAMP)/mass;
+		Ashear 	 =  (shear_stress_ext*exp(-100/t) - shear_stress_in - DAMP)/mass;
 		Vshear 	+= (Ashear-Ashear_p)*dt_on_2;
 		//exp	
 		if( Vshear < -SHEAR_LIMIT*L.x[1]) Vshear = -SHEAR_LIMIT*L.x[1]; //limit cell velocity
@@ -246,7 +246,7 @@ if(boundary=="PERIODIC_TILT") cout<<"\tPeriodic tilt: x y and z directions are p
 
 if(normal_stress_control) cout<<"\tNormal stress is controlled:\t"<<normal_stress_ext*exp(-100/t)<<endl;// AK addition - ramp normal stress
 else	cout<<"\tNormal stress is not controlled: constant volume"<<endl;
-if(shear_stress_control)cout<<"\tShear stress is controlled:\t"<<shear_stress_ext<<endl;	
+if(shear_stress_control)cout<<"\tShear stress is controlled:\t"<<shear_stress_ext*exp(-100/t)<<endl;	
 else cout<<"\tShear rate is controlled:\t"<<shear_rate*exp(-100/t)<<endl;// AK addition - ramp shear rate	
 cout<<"\tNormal/Shear stress inside:\t"<<normal_stress_in<<"/"<<shear_stress_in<<endl;
     cout<<"\tEffective stress inside:\t"<<stressEff.x[1][1]<<"/"<<stressEff.x[0][1]<<endl;
@@ -266,7 +266,7 @@ ofstream & operator<<(ofstream &file,Ccell c)
 	
 	file<<c.L;
 	file<<c.boundary<<"\t"<<c.mass<<"\t";
-	file<<c.normal_stress_ext*(c.normal_stress_control?exp(-100/c.t):1)<<"\t"<<c.shear_stress_ext<<"\t"<<c.normal_stress_in<<"\t"<<c.shear_stress_in<<"\t";//AK addition - ramp normal stress
+	file<<c.normal_stress_ext*(c.normal_stress_control?exp(-100/c.t):1)<<"\t"<<c.shear_stress_ext*exp(-100/t)<<"\t"<<c.normal_stress_in<<"\t"<<c.shear_stress_in<<"\t";//AK addition - ramp normal stress
 	file<<c.shear_rate*(!c.shear_stress_control && !c.shear_work_control?exp(-100/c.t):1)<<"\t"<<c.dilat_rate<<"\t"<<c.cumul_strain<<"\t";//AK addition - ramp shear rate
 	file<<c.Ashear<<"\t"<<c.Adilat<<"\t"<<c.Vshear<<"\t"<<c.Vdilat<<"\t";
 	file<<c.normal_stress_control<<"\t"<<c.shear_stress_control<<"\t";
