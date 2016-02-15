@@ -266,7 +266,7 @@ ofstream & operator<<(ofstream &file,Ccell c)
 	
 	file<<c.L;
 	file<<c.boundary<<"\t"<<c.mass<<"\t";
-	file<<c.normal_stress_ext*(c.normal_stress_control?exp(-100/c.t):1)<<"\t"<<c.shear_stress_ext*exp(-100/t)<<"\t"<<c.normal_stress_in<<"\t"<<c.shear_stress_in<<"\t";//AK addition - ramp normal stress
+	file<<c.normal_stress_ext*(c.normal_stress_control?exp(-100/c.t):1)<<"\t"<<c.shear_stress_ext*(c.shear_stress_control?exp(-100/c.t):1)<<"\t"<<c.normal_stress_in<<"\t"<<c.shear_stress_in<<"\t";//AK addition - ramp normal stress
 	file<<c.shear_rate*(!c.shear_stress_control && !c.shear_work_control?exp(-100/c.t):1)<<"\t"<<c.dilat_rate<<"\t"<<c.cumul_strain<<"\t";//AK addition - ramp shear rate
 	file<<c.Ashear<<"\t"<<c.Adilat<<"\t"<<c.Vshear<<"\t"<<c.Vdilat<<"\t";
 	file<<c.normal_stress_control<<"\t"<<c.shear_stress_control<<"\t";
