@@ -257,7 +257,9 @@ for(config.t=tstart;config.t<tend;config.t+=dt)   //start time loop
 		config.iterate(dt); // make a evolution of configuration over a time step dt, with or without refreshing the neighbours
 		
 		config.Voronoi_Update = false;
-		if(vflag%50 == 0) config.Voronoi_Update = true;
+		//AK modification - Update neighbours at every step
+		//if(vflag%50 == 0) config.Voronoi_Update = true;
+		if(vflag%1 == 0) config.Voronoi_Update = true;
 		vflag++;
 		
 		if( save.should_do(config.t) ) //save if asked
